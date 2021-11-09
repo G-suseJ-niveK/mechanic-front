@@ -1,0 +1,75 @@
+name: Deploy on Stage using Tags
+
+on:
+  push:
+    tags:
+      - v*stage
+
+jobs:
+  # Workflow de trabajo
+  stage-deploy:
+    # Entorno de servidor para el workflow
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    # Pasos a ejecutar del workflow
+    steps:
+      # Obtener el código
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Se cargan los submodulos
+      - name: Clone submodule Theme
+        uses: actions/checkout@v2
+        with:
+          repository: Agros-Dev-Team/material-themes
+          path: src/ui/themes
+          ssh-key: ${{ secrets.SSH_KEY_SUBMODULES }}
+          persist-credentials: true
+
+      - name: Checkout submodules
+        run: |
+          git submodule init
+          git submodule update
+
+      # Configurar AWS
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Config environments with S3
+        env:
+          BUCKET_ENV: ${{ secrets.AWS_BUCKET_ENV }}
+        run: |
+          aws s3 cp s3://$BUCKET_ENV/.env.stage .env
+
+      # Comando de construcción de imagen
+      - name: Construir los archivos estáticos
+        id: build-front
+        run: |
+          npm install
+          npm run build
+
+      # Comando de deploy a S3
+      - name: Actualizar S3
+        env:
+          BUCKET: ${{ secrets.AWS_BUCKET }}
+        run: |
+          cd build
+          aws s3 sync . s3://$BUCKET/stage
+
+      # Comando de actualización de CloudFront
+      - name: Actualizar CloudFront
+        env:
+          DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
+        run: |
+          aws cloudfront create-invalidation \
+          --distribution-id $DISTRIBUTION_ID \
+          --paths "/index.html"

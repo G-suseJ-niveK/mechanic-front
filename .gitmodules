@@ -1,0 +1,3 @@
+[submodule "src/ui/themes"]
+	path = src/ui/themes
+	url = git@github.com:Agros-Dev-Team/material-themes.git

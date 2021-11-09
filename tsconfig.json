@@ -1,0 +1,43 @@
+{
+  "extends": "./tsconfig.paths",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "jsx": "react",
+    "types": [
+      "@types/yup",
+      "@types/jest",
+      "@types/node",
+      "@types/react",
+      "@types/react-dom",
+      "@types/jwt-decode",
+      "@types/react-redux",
+      "@types/react-router-dom",
+      "@types/amazon-cognito-auth-js"
+    ]
+  },
+  "include": [
+    "src"
+  ]
+}
