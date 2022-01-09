@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { HOST_API, JWT_PREFIX } from '~config/environment';
-import store from '~redux-store/store';
-import { forceLogOut, refreshToken } from '~redux-store/actions/authActions';
 import { isExpired } from '../middlewares/jwt';
 
 const apiClient = axios.create({
@@ -29,20 +27,19 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response: any) => {
     // refresh token
-    if (isExpired()) store.dispatch(refreshToken());
     return response;
   },
   (error: any) => {
     const { response } = error;
     if (response?.status === 401 || response?.status === 412) {
       // token expired
-      store.dispatch(forceLogOut());
+
       return; // Promise.reject(error);
     }
 
     if (response?.status === 403) {
       // Requiere autorizacion de headers
-      store.dispatch(forceLogOut());
+
       return; // Promise.reject(error);
     }
     return Promise.reject(error);

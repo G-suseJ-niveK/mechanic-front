@@ -7,7 +7,6 @@ RUN apt-get install -y nodejs
 WORKDIR /var/front
 
 COPY . .
-COPY ./nginx-default.conf /etc/nginx/conf.d/default.conf
 
 RUN npm install
 RUN npm run build

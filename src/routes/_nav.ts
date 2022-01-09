@@ -1,6 +1,6 @@
 // import { object } from 'yup';
 // eslint-disable-next-line
-import routesName, { moduleRoute } from './routes';
+import { moduleRoute } from './routes';
 
 const routesNew: any = [];
 
