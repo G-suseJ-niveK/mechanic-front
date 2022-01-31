@@ -1,6 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import routesName from '~routes/routes';
+import { Route } from 'react-router-dom';
 
 const GuardRoute = ({ component: Component, type, ...rest }: any) => {
   return (

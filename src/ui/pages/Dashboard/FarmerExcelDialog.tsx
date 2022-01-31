@@ -14,12 +14,14 @@ import { useFormik } from 'formik';
 type AdditionalDataExcelComponentProps = {
   open: boolean;
   closeAction: any;
+  setIsGrafic: any;
+  setDataFile: any;
 };
 
 const AdditionalDataExcelComponent: React.FC<AdditionalDataExcelComponentProps> = (
   props: AdditionalDataExcelComponentProps
 ) => {
-  const { open, closeAction } = props;
+  const { open, closeAction, setIsGrafic, setDataFile } = props;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(undefined);
   const [fileName, setFileName] = useState<any>(undefined);
@@ -53,9 +55,12 @@ const AdditionalDataExcelComponent: React.FC<AdditionalDataExcelComponentProps> 
       const prevFourier = Object.assign({}, dataNumber);
 
       getFourier({ ...prevFourier, data })
-        .then(() => {
+        .then((res: any) => {
           if (isCompMounted.current) {
+            const dataFile = res.data.data;
+            setDataFile(dataFile);
             setIsLoading(false);
+            setIsGrafic(true);
             closeAction();
             showMessage(
               '',
@@ -134,7 +139,13 @@ const AdditionalDataExcelComponent: React.FC<AdditionalDataExcelComponentProps> 
       onClose={() => 0}
       actions={
         <>
-          <CustomButton onClick={() => closeAction()} variant="outlined" disabled={isLoading} text="Cancelar" />
+          <CustomButton
+            onClick={() => closeAction()}
+            variant="outlined"
+            sx={{ background: 'red', color: '#fff' }}
+            disabled={isLoading}
+            text="Cancelar"
+          />
           <Button
             variant="contained"
             color="primary"
@@ -154,7 +165,7 @@ const AdditionalDataExcelComponent: React.FC<AdditionalDataExcelComponentProps> 
                 <TextField
                   id="time"
                   name="time"
-                  type="text"
+                  type="number"
                   label="Tiempo que duro los datos"
                   value={formik.values.time}
                   onChange={formik.handleChange}
@@ -167,7 +178,7 @@ const AdditionalDataExcelComponent: React.FC<AdditionalDataExcelComponentProps> 
                 <TextField
                   id="count"
                   name="count"
-                  type="text"
+                  type="number"
                   label="Cantidad de datos"
                   value={formik.values.count}
                   onChange={formik.handleChange}

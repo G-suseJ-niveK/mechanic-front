@@ -2,10 +2,12 @@ import React, { useState, useCallback } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import { Box, Button, Grid } from '@material-ui/core';
 import ExcelDialog from './FarmerExcelDialog';
+import AppAreaInstalled from '~ui/components/dashboard/AppAreaInstalled';
 
 const CompDashboard = () => {
-  const [isGrafic, setIsGrafic] = useState(false);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [isGrafic, setIsGrafic] = useState<boolean>(false);
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const [data, setData] = useState<any>({});
 
   const handleDialog = useCallback(() => {
     setIsOpenDialog((isOpenFarmerDialog: boolean) => !isOpenFarmerDialog);
@@ -16,14 +18,18 @@ const CompDashboard = () => {
       width="100%"
       height="100%"
       position="absolute"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
       left={0}
       top={0}
       style={{
-        backgroundImage:
-          'radial-gradient(circle at 44.29% -15.29%, #00ffff 0, #00f6ff 25%, #09b8ff 50%, #2c7eb0 75%, #284d6b 100%)'
+        backgroundImage: '#fff'
       }}>
       <Grid height="100%" container flexDirection="row" justifyContent="center" alignItems="center">
         <Grid
+          height="30%"
           item={true}
           xs={12}
           sm={12}
@@ -33,7 +39,7 @@ const CompDashboard = () => {
           flexDirection="row"
           justifyContent="center"
           alignItems="center">
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100%">
             <Button
               variant="contained"
               onClick={() => handleDialog()}
@@ -48,8 +54,10 @@ const CompDashboard = () => {
         </Grid>
         {isGrafic && (
           <Grid
-            height="100%"
+            height="70%"
             container
+            spacing={5}
+            p={8}
             item
             flexDirection="row"
             justifyContent="center"
@@ -69,7 +77,7 @@ const CompDashboard = () => {
               flexDirection="row"
               justifyContent="center"
               alignItems="center">
-              Grafica
+              <AppAreaInstalled dataY={data?.amplitud} dataX={data?.tiempo} name="datos" title="Tiempo" />
             </Grid>
             <Grid
               item={true}
@@ -81,12 +89,19 @@ const CompDashboard = () => {
               flexDirection="row"
               justifyContent="center"
               alignItems="center">
-              Grafica
+              <AppAreaInstalled
+                dataY={data?.amplitud_fft}
+                dataX={data?.frecuencia}
+                name="Amplitud"
+                title="Frecuencia"
+              />
             </Grid>
           </Grid>
         )}
       </Grid>
-      {isOpenDialog && <ExcelDialog open={isOpenDialog} closeAction={handleDialog} />}
+      {isOpenDialog && (
+        <ExcelDialog open={isOpenDialog} closeAction={handleDialog} setIsGrafic={setIsGrafic} setDataFile={setData} />
+      )}
     </Box>
   );
 };

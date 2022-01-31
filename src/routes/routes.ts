@@ -12,5 +12,5 @@ export const moduleRoute = {
 
 export default {
   //Dashboard
-  dashboard: HOST_URL + moduleRoute.dashboard.path
+  dashboard: HOST_URL
 };

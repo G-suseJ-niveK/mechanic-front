@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { HOST_API, JWT_PREFIX } from '~config/environment';
-import { isExpired } from '../middlewares/jwt';
 
 const apiClient = axios.create({
   baseURL: `${HOST_API}`,
